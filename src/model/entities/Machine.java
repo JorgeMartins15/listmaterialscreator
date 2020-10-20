@@ -1,18 +1,27 @@
 package model.entities;
 
 public class Machine {
-
+	private Integer machineId;
 	private String name;
 	private String type;
 	
 	public Machine() {
 
 	}
-	
-	public Machine(String name, String type) {
-		
+
+	public Machine(Integer machineId, String name, String type) {
+		super();
+		this.machineId = machineId;
 		this.name = name;
 		this.type = type;
+	}
+
+	public Integer getMachineId() {
+		return machineId;
+	}
+
+	public void setMachineId(Integer machineId) {
+		this.machineId = machineId;
 	}
 
 	public String getName() {
@@ -35,6 +44,7 @@ public class Machine {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((machineId == null) ? 0 : machineId.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
@@ -49,6 +59,11 @@ public class Machine {
 		if (getClass() != obj.getClass())
 			return false;
 		Machine other = (Machine) obj;
+		if (machineId == null) {
+			if (other.machineId != null)
+				return false;
+		} else if (!machineId.equals(other.machineId))
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -64,9 +79,8 @@ public class Machine {
 
 	@Override
 	public String toString() {
-		return "Machine [name=" + name + ", type=" + type + "]";
+		return "Machine [machineId=" + machineId + ", name=" + name + ", type=" + type + "]";
 	}
-	
-	
+
 	
 }
