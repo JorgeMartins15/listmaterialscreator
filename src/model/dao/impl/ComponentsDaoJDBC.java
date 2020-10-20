@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.DB;
 import db.DbException;
@@ -45,8 +48,10 @@ public class ComponentsDaoJDBC implements ComponentsDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT components.*,machine.Name as MacName,machine.Type as MacType " + "FROM components INNER JOIN machine "
-							+ "ON components.MachineId = machine.Id " + "WHERE components.Id = ? ");
+					"SELECT components.*,machine.Name as MacName,machine.Type as MacType " 
+					+ "FROM components INNER JOIN machine "
+					+ "ON components.MachineId = machine.Id " 
+					+ "WHERE components.Id = ? ");
 
 			st.setInt(1, id);
 			rs = st.executeQuery();
@@ -79,13 +84,9 @@ public class ComponentsDaoJDBC implements ComponentsDao {
 	private Machine instantiateMachine(ResultSet rs) throws SQLException {
 		Machine mac = new Machine();
 		mac.setMachineId(rs.getInt("Id"));
-		
-		mac.setName(rs.getString("MacName"));
-		
-		mac.setType(rs.getString("MacType"));
+		mac.setName(rs.getString("MacName"));  //MacName é apelido para nome da coluna
+		mac.setType(rs.getString("MacType"));  //MacType é apelido para nome da coluna
 
-//		mac.setName(rs.getString("Name"));
-//		mac.setType(rs.getString("Type"));
 		return mac;
 	}
 
@@ -96,9 +97,48 @@ public class ComponentsDaoJDBC implements ComponentsDao {
 	}
 
 	@Override
-	public List<Components> findByDepartment(Machine machine) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Components> findByMachine(Machine machine) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+					"SELECT components.*,machine.Name as MacName, machine.Type as MacType "
+					+"FROM components INNER JOIN machine "
+					+"ON components.MachineId = machine.Id "
+					+"WHERE MachineId = ? "
+					+"ORDER BY Name");
+			
+			st.setInt(1, machine.getMachineId());
+
+			rs = st.executeQuery();
+
+			List<Components> list = new ArrayList<>();
+			Map<Integer, Machine> map = new HashMap<>();
+
+			while (rs.next()) {
+
+				Machine dep = map.get(rs.getInt("MachineId"));
+
+				if (dep == null) {
+					dep = instantiateMachine(rs);
+					map.put(rs.getInt("MachineId"), dep);
+				}
+
+				Components obj = instantiateComponents(rs, dep);
+				list.add(obj);
+			}
+			return list;
+		} 
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} 
+		finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+
 	}
+
+
 
 }
