@@ -12,5 +12,5 @@ public interface ComponentsDao {
 	void deleteById(Integer id);
 	Components findById(Integer id);
 	List<Components> findAll();
-	List<Components> findByMachine(Machine machine);
+	List<Components> findByMachineId(Machine machine);
 }
