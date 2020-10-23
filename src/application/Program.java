@@ -21,7 +21,7 @@ public class Program {
 		System.out.println(components);
 
 		System.out.println("\n=== TEST 2: components findByMachine =====");
-		Machine machine = new Machine(3, null, null);
+		Machine machine = new Machine(5, null, null);
 		List<Components> list = componentsDao.findByMachineId(machine);
 		for (Components obj : list) {
 			System.out.println(obj);
@@ -32,7 +32,6 @@ public class Program {
 		for (Components obj : list) {
 			System.out.println(obj);
 		}
-		
 		
 		System.out.println("\n=== TEST 4: components insert =====");
 		//Machine machineId = new Machine(6, null, null);

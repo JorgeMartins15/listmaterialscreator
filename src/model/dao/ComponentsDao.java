@@ -13,4 +13,5 @@ public interface ComponentsDao {
 	Components findById(Integer id);
 	List<Components> findAll();
 	List<Components> findByMachineId(Machine machine);
+	
 }
